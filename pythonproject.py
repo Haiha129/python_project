@@ -1,7 +1,9 @@
 # tạo đăng nhập/ đăng ký
 
+from msilib import Win64
 import tkinter as tk
-wordlist ={}
+import os
+wordlist ={'mom': 'mẹ', 'dad': 'bố'}
 default_name= 'haiha'
 default_pass= '1234'
 #đăng ký
@@ -66,19 +68,50 @@ def open_screen_word():
     win4_button1.pack()
     win4_button1=tk.Button(win4, text='Delete')
     win4_button1.pack()
-    win4_button1=tk.Button(win4, text='Modify')
+    win4_button1=tk.Button(win4, text='Search', command = search)
     win4_button1.pack()
     win4_button1=tk.Button(win4, text='View')
     win4_button1.pack()
 
+
 #lưu từ
 def save_word():
+    global word
+    global meaning
+    word = word.get()
+    meaning = meaning.get()
+    wordlist[word]=meaning
+    win5_entry1.delete(0,tk.END)
+    win5_entry2.delete(0,tk.END)
+    win5_lbl3=tk.Label(win5,text='Successful Added')
+    win5_lbl3.grid(row=5,column=2)
+    print(wordlist)
+
+# show kết quả
+def show_answer():
     pass
+
 
 # sửa từ
-def modify():
-    pass
+def search():
+    global win6
+    global word
+    global meaning
+    win6=tk.Toplevel(win4)
+    win6.geometry('500x300')
+    win6_lbl1= tk.Label(win6, text='Enter the key')
+    win6_lbl1.grid(row=1, column=1)
+    win6_lbl2=tk.Label(win6, text='Result')
+    win6_lbl2.grid(row=6, column=1)
+    word = tk.StringVar()
+    win6_entry1=tk.Entry(win6, textvariable = word)
+    win6_entry1.grid(row=1, column=2)
+    
+    win6_entry2=tk.Entry(win6, text = '')
+    win6_entry2.grid(row=6, column=2)
 
+    win6_btn1=tk.Button(win6, text='Search', command = show_answer)
+    win6_btn1.grid(row=3, column=2)
 # view
 def view():
     pass
@@ -86,6 +119,7 @@ def view():
    
 #thêm từ
 def add_word():
+    global win5
     win5=tk.Toplevel(win4)   
     win5.geometry('500x300') 
 
