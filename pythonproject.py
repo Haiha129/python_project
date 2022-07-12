@@ -1,6 +1,5 @@
 # tạo đăng nhập/ đăng ký
 
-from msilib import Win64
 import tkinter as tk
 import os
 wordlist ={'mom': 'mẹ', 'dad': 'bố'}
@@ -66,31 +65,68 @@ def open_screen_word():
     win4.geometry('500x300')
     win4_button1=tk.Button(win4, text='Add', command = add_word)
     win4_button1.pack()
-    win4_button1=tk.Button(win4, text='Delete')
+    win4_button1=tk.Button(win4, text='Delete',command= delete)
     win4_button1.pack()
     win4_button1=tk.Button(win4, text='Search', command = search)
     win4_button1.pack()
-    win4_button1=tk.Button(win4, text='View')
+    win4_button1=tk.Button(win4, text='Modify',command=modify)
     win4_button1.pack()
 
+# thông báo add từ thành công
+def save():
+    if word.get() in wordlist:
+        win5_lbl4=tk.Label(win5,text="Already exists")
+        win5_lbl4.grid(row=6,column=2)
+        win5_entry1.delete(0,tk.END)
+        win5_entry2.delete(0,tk.END)
+    else:   
+        wordlist.update({word.get():meaning.get()})
+        win5_lbl3=tk.Label(win5,text='Successful Added')
+        win5_lbl3.grid(row=5,column=2)
+        win5_lbl4=tk.Label(win5,text="Your word added: "+"\n"+str(word.get())+': '+str(meaning.get()))
+        win5_lbl4.grid(row=6,column=2)
+        win5_entry1.delete(0,tk.END)
+        win5_entry2.delete(0,tk.END)    
 
-#lưu từ
-def save_word():
+#kết quả xóa từ:
+def show_result_del():
+    word_enter=word.get()
+    if word.get() in wordlist:  
+        del wordlist[word.get()]
+        win7_lbl2= tk.Label(win7, text ='Deleted')
+        win7_lbl2.pack()    
+    else:
+        win7_lbl2= tk.Label(win7, text = "Not Found")
+        win7_lbl2.pack()
+
+
+#chức năng xóa từ:
+def delete():
+    global win7
     global word
-    global meaning
-    word = word.get()
-    meaning = meaning.get()
-    wordlist[word]=meaning
-    win5_entry1.delete(0,tk.END)
-    win5_entry2.delete(0,tk.END)
-    win5_lbl3=tk.Label(win5,text='Successful Added')
-    win5_lbl3.grid(row=5,column=2)
-    print(wordlist)
+    win7=tk.Toplevel(win4)
+    win7.geometry('500x300')
+    win7_lbl1= tk.Label(win7, text='Enter the key')
+    win7_lbl1.pack()
+    word = tk.StringVar()
+    win7_entry1=tk.Entry(win7, textvariable = word)
+    win7_entry1.pack()
 
-# show kết quả
-def show_answer():
-    pass
 
+    win7_btn1=tk.Button(win7, width=5,heigh=1, text='Delele',command= show_result_del)
+    win7_btn1.pack()
+
+
+# show result tìm kiếm
+def show_answer_search():
+    word_enter=word.get()
+    if word.get() in wordlist:
+        result=wordlist[word.get()]
+        win6_lbl2= tk.Label(win6, text = "Meaning: "+str(result))
+        win6_lbl2.pack()
+    else:
+        win6_lbl2= tk.Label(win6, text = "Not Found")
+        win6_lbl2.pack()
 
 # sửa từ
 def search():
@@ -100,22 +136,55 @@ def search():
     win6=tk.Toplevel(win4)
     win6.geometry('500x300')
     win6_lbl1= tk.Label(win6, text='Enter the key')
-    win6_lbl1.grid(row=1, column=1)
-    win6_lbl2=tk.Label(win6, text='Result')
-    win6_lbl2.grid(row=6, column=1)
+    win6_lbl1.pack()
     word = tk.StringVar()
     win6_entry1=tk.Entry(win6, textvariable = word)
-    win6_entry1.grid(row=1, column=2)
+    win6_entry1.pack()
+
+
+    win6_btn1=tk.Button(win6, width=5,heigh=1, text='Search',command=show_answer_search)
+    win6_btn1.pack()
+
+# # #show kết quả sửa:
+# def modify_result():
+#     meaning_enter = meaning.get()
+#     win8_lbl4=tk.Label(win8, text='Saved Change. Result: '+str(word.get())+': '+str(meaning.get()))
+#     win8_lbl4.pack()
+
+
+# #trả kết quả tìm kiếm trước khi sửa:
+# def search_mod():
+#     win8_lbl2=tk.Label(win8, text='Result')
+#     win8_lbl2.pack()
+#     result=wordlist[word.get()]
+#     win8_entry2=tk.Entry(win8, textvariable =result)
+#     win8_entry2.pack()
+#     win8_lbl3=tk.Label(win8, text='Modify')
+#     win8_lbl3.pack()
+#     win8_entry3=tk.Entry(win8, text='Modify')
+#     win8_entry3.pack()
+#     win8_button2=tk.Button(win8, text='Modify',command = modify_result)
+#     win8_button2.pack()
+
+
+
+# # #sửa từ
+# def modify():
+#     global win8
+#     win8=tk.Toplevel(win4)   
+#     win8.geometry('500x300')
+#     word_enter=word.get()
+#     win8_lbl1= tk.Label(win8, text='Word')
+#     win8_lbl1.pack()
+#     win8_entry1=tk.Entry(win8, textvariable = word)
+#     win8_entry1.pack()
+
+#     win8_button1=tk.Button(win8, text='Process',command = search_mod)
+#     win8_button1.pack()
+
     
-    win6_entry2=tk.Entry(win6, text = '')
-    win6_entry2.grid(row=6, column=2)
 
-    win6_btn1=tk.Button(win6, text='Search', command = show_answer)
-    win6_btn1.grid(row=3, column=2)
-# view
-def view():
-    pass
-
+   
    
 #thêm từ
 def add_word():
@@ -131,7 +200,7 @@ def add_word():
     meaning=tk.StringVar()
     word_enter=word.get()
     meaning_enter=meaning.get()
-
+    
     win5_lbl1= tk.Label(win5, text='Word')
     win5_lbl1.grid(row=1, column=1)
     win5_lbl2=tk.Label(win5, text='Meaning')
@@ -142,9 +211,9 @@ def add_word():
     
     win5_entry2=tk.Entry(win5, textvariable = meaning)
     win5_entry2.grid(row=2, column=2)
-
-    win5_button1=tk.Button(win5, text='Add', command = save_word)
-    win5_button1.grid(row=4, column=2)
+    win5_button1=tk.Button(win5, text='Add',command = save)
+    win5_button1.grid(row=3, column=2)
+  
 
 #thông báo login thành công
 def login_success():
